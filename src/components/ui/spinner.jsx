@@ -8,4 +8,4 @@ const Spinner = () => {
   );
 };
 
-export default Spinner;
+export { Spinner }; // Export Spinner component as named export
