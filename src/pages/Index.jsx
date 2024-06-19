@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Spinner } from "@/components/ui/spinner"; // Import Spinner component
 import axios from 'axios';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,10 @@ const Index = () => {
     setSelectedImage(url);
   };
 
+  const [loading, setLoading] = useState(false); // Add loading state
+
   const handleSubmit = async () => {
+    setLoading(true); // Set loading to true when request starts
     try {
       const response = await axios.post("https://freider-kive-demo--sglang-inference-web-api.modal.run", {
         image_url: selectedImage,
@@ -36,6 +40,8 @@ const Index = () => {
       setAnswer(response.data.answer);
     } catch (error) {
       console.error("Error fetching the answer:", error);
+    } finally {
+      setLoading(false); // Set loading to false when request ends
     }
   };
 
@@ -70,7 +76,9 @@ const Index = () => {
           onChange={(e) => setQuestion(e.target.value)}
           className="w-full mb-2"
         />
-        <Button onClick={handleSubmit} className="w-full">Ask AI</Button>
+        <Button onClick={handleSubmit} className="w-full" disabled={loading}>
+          {loading ? <Spinner /> : "Ask AI"} {/* Show spinner when loading */}
+        </Button>
       </div>
       {answer && (
         <Card>
